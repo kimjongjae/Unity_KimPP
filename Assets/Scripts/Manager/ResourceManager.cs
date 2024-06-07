@@ -4,35 +4,34 @@ using UnityEngine;
 
 public class ResourceManager : Singleton<ResourceManager>
 {
-    private Dictionary<string, GameObject> _resourceCache;
+    private Dictionary<string, GameObject> _resourceCache = new Dictionary<string, GameObject>();
+    private Dictionary<string, Sprite> _resourceCacheSpr = new Dictionary<string, Sprite>();
 
-    public GameObject LoadResourceFromChche(string Path)
+    public void LoadResourceFromChche_Go(string Path, out GameObject outGetGo)
     {
-        GameObject resourceObj = null;
-        _resourceCache.TryGetValue(Path, out resourceObj);
+        _resourceCache.TryGetValue(Path, out var resourceObj);
 
-        if(!ReferenceEquals(resourceObj, null))
+        if(ReferenceEquals(resourceObj, null))
         {
             resourceObj = Resources.Load<GameObject>(Path);
             _resourceCache.Add(Path, resourceObj);
         }
 
-        return resourceObj;
+        outGetGo = resourceObj;
     }
 
-    //public Sprite LoadResourceFromChche(string Path)
-    //{
-    //    GameObject resourceObj = null;
-    //    _resourceCache.TryGetValue(Path, out resourceObj);
+    public void LoadResourceFromChche_Spr(string Path, out Sprite outGetSpr)
+    {
+        _resourceCacheSpr.TryGetValue(Path, out var resourceObj);
 
-    //    if (!ReferenceEquals(resourceObj, null))
-    //    {
-    //        resourceObj = Resources.Load<GameObject>(Path);
-    //        _resourceCache.Add(Path, resourceObj);
-    //    }
+        if (ReferenceEquals(resourceObj, null))
+        {
+            resourceObj = (Sprite)Resources.Load(Path, typeof(Sprite));
+            _resourceCacheSpr.Add(Path, resourceObj);
+        }
 
-    //    return resourceObj;
-    //}
+        outGetSpr = resourceObj;
+    }
 
     public void ClearChache()
     {

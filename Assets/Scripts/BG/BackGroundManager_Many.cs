@@ -19,8 +19,12 @@ public class BackGroundManager_Many : MonoBehaviour
 
     public GameObject[] backgrounds;
 
+    bool isStop = false;
+
     private void Awake()
     {
+        isStop = true;
+
         // 게임을 시작할 때 카메라의 위치 저장 (이동 거리 계산용)
         cameraStartPosition = cameraTransform.position;
 
@@ -65,16 +69,34 @@ public class BackGroundManager_Many : MonoBehaviour
 
     private void LateUpdate()
     {
-        // 카메라가 이동한 거리 = 카메라의 현재 위치 - 시작 위치
-        distance = cameraTransform.position.x - cameraStartPosition.x;
-        // 배경의 x 위치를 현재 카메라의 x 위치로 설정
-        transform.position = new Vector3(cameraTransform.position.x, transform.position.y, 0);
-
-        // 레이어별로 현재 배경이 출력되는 offset 설정
-        for (int i = 0; i < materials.Length; ++i)
+        if (!isStop)
         {
-            float speed = layerMoveSpeed[i] * parallaxSpeed;
-            materials[i].SetTextureOffset("_MainTex", new Vector2(distance, 0) * speed);
+            // 카메라가 이동한 거리 = 카메라의 현재 위치 - 시작 위치
+            distance = cameraTransform.position.x - cameraStartPosition.x;
+            // 배경의 x 위치를 현재 카메라의 x 위치로 설정
+            transform.position = new Vector3(cameraTransform.position.x, transform.position.y, 0);
+
+            // 레이어별로 현재 배경이 출력되는 offset 설정
+            for (int i = 0; i < materials.Length; ++i)
+            {
+                float speed = layerMoveSpeed[i] * parallaxSpeed;
+                materials[i].SetTextureOffset("_MainTex", new Vector2(distance, 0) * speed);
+            }
         }
+    }
+
+    private void OnEnable()
+    {
+        GameEventObserver.Subscribe(GameEventType.CameraIsStopStart, IsStop);
+    }
+
+    private void OnDisable()
+    {
+        GameEventObserver.UnSubscribe(GameEventType.CameraIsStopStart, IsStop);
+    }
+
+    void IsStop(object obj)
+    {
+        isStop = bool.Parse(obj.ToString());
     }
 }

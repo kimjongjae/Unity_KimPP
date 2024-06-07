@@ -6,7 +6,10 @@ using UnityEngine.Events;
 
 public enum GameEventType
 {
-   
+   //초기 게임 실행
+   GameStart,
+   //배경, 카메라 이동 제어
+   CameraIsStopStart,
 }
 
 public class GameEventObserver : MonoBehaviour
