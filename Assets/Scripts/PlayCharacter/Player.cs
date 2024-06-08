@@ -6,17 +6,17 @@ using System;
 
 public partial class Player : Unit
 {
-    Status playerStatus = null;
     public UnitAnimtor[] unitAnimtors = null;
-
+    bool _isAttacking = false;
+    CharacterWeaponType weaponType = default;
     public override void Init()
     {
         base.Init();
-        playerStatus = new PlayerStatus();
-        playerStatus.FinalStatus();
-        Distance = playerStatus.DISTANCE;
-        MoveSpeed = playerStatus.MOVE_SPEED;
+        statusData = new PlayerStatus();
+        statusData.FinalStatus();
         SetUnitType(UnitType.Player);
+        weaponType = CharacterWeaponType.Sword;
+        NowHP = statusData.HP;
     }
 }
 
@@ -25,10 +25,40 @@ public partial class Player
 {
     public override void AttackAnim()
     {
+        //bomb_hold_side
+        //bomb_throw_side
+        //sword_attack_side
+        //scythe_attack_side
+        //hammer_attack_side
+        //vanish
+
+        switch (weaponType)
+        {
+            case CharacterWeaponType.Sword:
+                {
+                    if (!_isAttacking)
+                    {
+                        mainAnim.Play("sword_attack_side");
+                        _isAttacking = true;
+                    }
+                }
+                break;
+            case CharacterWeaponType.Bow:
+                break;
+            case CharacterWeaponType.Gun:
+                break;
+            case CharacterWeaponType.Sickle:
+                break;
+            case CharacterWeaponType.Boom:
+                break;
+            case CharacterWeaponType.Hammer:
+                break;
+        }
     }
 
     public override void DieAnim()
     {
+        mainAnim.Play("Die");
     }
 
     public override void HitAnim()
@@ -37,16 +67,17 @@ public partial class Player
 
     public override void IdleAnim()
     {
-        mainAnim.SetTrigger("Idle");
+        mainAnim.Play("idle_side");
     }
 
     public override void RunAnim()
     {
-        mainAnim.SetTrigger("Run");
+        mainAnim.Play("run_side");
     }
 
     public override void WalkAnim()
     {
+        mainAnim.Play("walk_side");
     }
 
     public override void SkillAnim()
@@ -56,6 +87,17 @@ public partial class Player
     public override void UnitAction()
     {
         base.UnitAction();
+    }
+
+    public override void AnimEnd_Override()
+    {
+        _isAttacking = false;
+        ProjectileObj.CreateProjectObj(true, this, targetUnit);
+    }
+
+    public override void AnimStart_Override()
+    {
+        unitAnimtors[(int)weaponType].WeaponGo.SetActive(true);
     }
 }
 

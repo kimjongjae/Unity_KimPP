@@ -19,9 +19,9 @@ namespace Common
     //캐릭터 무기 타입 
     public enum CharacterWeaponType
     {
+        Sword,
         Gun,
         Sickle,
-        Sword,
         Boom,
         Hammer,
         Bow,
@@ -44,6 +44,19 @@ namespace Common
         Base_ATKPower,
     }
 
+    //유닛 액션 타입
+    public enum ActionType
+    {
+        Idle,
+        Attack,
+        Hit,
+        Run,
+        Walk,
+        Die,
+        Skill,
+        Sword,
+    }
+
     //유닛 타입
     public enum UnitType
     {
@@ -56,7 +69,11 @@ namespace Common
     {
         public const string char_BluePath = "Character/Blue_Character";
 
-
         public const string enemy_GhostPath = "Enemy/Prefab/Enemy_Ghost";
+    }
+
+    public class Common
+    {
+       
     }
 }

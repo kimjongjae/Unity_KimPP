@@ -5,15 +5,11 @@ using Common;
 
 public partial class Enemy : Unit
 {
-    Status enemyStatus = null;
-
     public override void Init()
     {
         base.Init();
-        enemyStatus = new EnemyStatus();
-        enemyStatus.FinalStatus();
-        Distance = enemyStatus.DISTANCE;
-        MoveSpeed = enemyStatus.MOVE_SPEED;
+        statusData = new EnemyStatus();
+        statusData.FinalStatus();
         SetUnitType(UnitType.Enemy);
     }
 }
@@ -53,6 +49,15 @@ public partial class Enemy
     {
         base.UnitAction();
     }
+
+    public override void AnimEnd_Override()
+    {
+    }
+
+    public override void AnimStart_Override()
+    {
+    }
+
 }
 
 //적 이동 관리
