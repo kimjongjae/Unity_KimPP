@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2786041883850356533}
   - component: {fileID: 6072348662234445152}
   - component: {fileID: 8215541017068014956}
+  - component: {fileID: 7599244729741494142}
   m_Layer: 5
   m_Name: Enemy_Ghost
   m_TagString: Untagged
@@ -98,6 +99,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poolingType: 0
-  mainAnim: {fileID: 0}
+  unitType: 0
+  mainAnim: {fileID: 7599244729741494142}
   mainSpriteRender: {fileID: 6072348662234445152}
   normalSprite: {fileID: 4740742658319907719, guid: d4f2f936f814df24fb7559370c465cdc, type: 3}
+--- !u!95 &7599244729741494142
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6986357306366093280}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 359e8493b2311d1449be485970c03e5f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

@@ -65,6 +65,7 @@ namespace Common
         Boss,
     }
 
+    //리소스 경로
     public class ResourcePath
     {
         public const string char_BluePath = "Character/Blue_Character";

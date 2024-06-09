@@ -9,6 +9,7 @@ public partial class Player : Unit
     public UnitAnimtor[] unitAnimtors = null;
     bool _isAttacking = false;
     CharacterWeaponType weaponType = default;
+
     public override void Init()
     {
         base.Init();
@@ -17,6 +18,21 @@ public partial class Player : Unit
         SetUnitType(UnitType.Player);
         weaponType = CharacterWeaponType.Sword;
         NowHP = statusData.HP;
+    }
+
+    public override void GameEvent_Observer()
+    {
+        GameEventObserver.Subscribe(GameEventType.UnitDie, UnitDieEvent);
+    }
+
+    public override void GameEvent_UnObserver()
+    {
+        GameEventObserver.UnSubscribe(GameEventType.UnitDie, UnitDieEvent);
+    }
+
+    void UnitDieEvent(object obj)
+    {
+        unitAnimtors[(int)weaponType].WeaponGo.SetActive(false);
     }
 }
 
@@ -58,7 +74,7 @@ public partial class Player
 
     public override void DieAnim()
     {
-        mainAnim.Play("Die");
+        mainAnim.Play("hit_A_die");
     }
 
     public override void HitAnim()
@@ -98,6 +114,10 @@ public partial class Player
     public override void AnimStart_Override()
     {
         unitAnimtors[(int)weaponType].WeaponGo.SetActive(true);
+    }
+
+    public override void AnimDie_Override()
+    {
     }
 }
 

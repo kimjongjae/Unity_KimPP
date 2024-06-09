@@ -10,6 +10,8 @@ public enum GameEventType
    GameStart,
    //배경, 카메라 이동 제어
    CameraIsStopStart,
+   //유닛 죽음
+   UnitDie,
 }
 
 public class GameEventObserver : MonoBehaviour
@@ -17,6 +19,8 @@ public class GameEventObserver : MonoBehaviour
     private static readonly IDictionary<GameEventType, UnityEvent<object>>
         Events = new Dictionary<GameEventType, UnityEvent<object>>();
 
+
+    //이벤트 등록
     public static void Subscribe(GameEventType eventType, UnityAction<object> listener)
     {
         UnityEvent<object> thisEvent;
@@ -33,6 +37,7 @@ public class GameEventObserver : MonoBehaviour
         }
     }
 
+    //이벤트 해제
     public static void UnSubscribe(GameEventType eventType, UnityAction<object> listener)
     {
         UnityEvent<object> thisEvent;
@@ -43,6 +48,7 @@ public class GameEventObserver : MonoBehaviour
         }
     }
 
+    //등록된 이벤트 실행
     public static void Publish(GameEventType eventType, object Data)
     {
         UnityEvent<object> thisEvent;

@@ -15,7 +15,7 @@ public class Follow_Camera : MonoBehaviour
         {
             if (PoolingManager.Instance.PoolingDic.TryGetValue(Common.PoolingType.Blue_Character, out var followChar))
             {
-                followTr = followChar.GetComponent<Transform>();
+                followTr = followChar[0].GetComponent<Transform>();
             }
         }
         else

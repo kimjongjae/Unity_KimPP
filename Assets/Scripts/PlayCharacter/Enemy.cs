@@ -11,6 +11,7 @@ public partial class Enemy : Unit
         statusData = new EnemyStatus();
         statusData.FinalStatus();
         SetUnitType(UnitType.Enemy);
+        NowHP = statusData.HP;
     }
 }
 
@@ -19,22 +20,27 @@ public partial class Enemy
 {
     public override void AttackAnim()
     {
+        mainAnim.Play("Ghost_Attack");
     }
 
     public override void DieAnim()
     {
+        mainAnim.Play("Ghost_Desappear");
     }
 
     public override void HitAnim()
     {
+        //mainAnim.Play("Ghost_Hit");
     }
 
     public override void IdleAnim()
     {
+        mainAnim.Play("Ghost_Idle");
     }
 
     public override void RunAnim()
     {
+        mainAnim.Play("Ghost_Idle");
     }
 
     public override void SkillAnim()
@@ -58,6 +64,9 @@ public partial class Enemy
     {
     }
 
+    public override void AnimDie_Override()
+    {
+    }
 }
 
 //적 이동 관리

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Common;
 using System.Linq;
+using System.Diagnostics.Tracing;
 
 public abstract partial class Unit : BaseUnit, CharacterHandle 
 {
@@ -15,25 +16,35 @@ public abstract partial class Unit : BaseUnit, CharacterHandle
 //행동 관련 및 변수
 public abstract partial class Unit
 {
+    //유닛 현재 활동 타입
     protected ActionType unitActionType = ActionType.Idle;
+    //유닛 타입 ex)캐릭터, 적, 보스
     public UnitType unitType = default;
 
+    //죽었는지 체크
     protected bool isDie = false;
+    //활동정지
     protected bool isStop = false;
+    //어택 딜레이 주기위함
     protected bool isAttacking = false;
 
     public Animator mainAnim = null;
     public SpriteRenderer mainSpriteRender = null;
     public Sprite normalSprite = null;
+
+    //유닛 스탯
     public Status statusData = null;
 
+    //유닛 버프
     public Status_Buff status_Buff { get; }
 
     protected float YPos => transform.position.y;
     protected float ZPos => transform.position.z;
 
+    //현재 피
     protected float NowHP { get; set; }
 
+    //피계산 위함
     public float RealHP
     {
         get
@@ -49,19 +60,30 @@ public abstract partial class Unit
                 return;
             }
 
-            NowHP -= value;
+            NowHP = value;
         }
     }
 
     private void OnEnable()
     {
         Init();
+        GameEvent_Observer();
         StartCoroutine("UnitThread");
     }
 
     private void OnDisable()
     {
+        GameEvent_UnObserver();
         StopCoroutine("UnitThread");
+    }
+
+    public virtual void GameEvent_Observer()
+    {
+    }
+
+    public virtual void GameEvent_UnObserver()
+    {
+
     }
 
     IEnumerator UnitThread()
@@ -110,8 +132,6 @@ public abstract partial class Unit
                 {
                     isStop = true;
                     DieAnim();
-                    PoolingManager.Instance.ClosePoolingObj(poolingType, gameObject);
-                    GameHandle.Instance.CloseTargetUnit(this);
                 }
                 break;
             case ActionType.Skill:
@@ -122,43 +142,54 @@ public abstract partial class Unit
         }
     }
 
+    //현재 유닛 행동 타입 변경
     public void ChangeActionType(ActionType actionType)
     {
         if (unitActionType != actionType)
             unitActionType = actionType;
     }
 
+    //현재 유닛 타입 Set
     public void SetUnitType(UnitType unitType)
     {
         this.unitType = unitType;
         GameHandle.Instance.AddTargetUnit(this);
     }
 
+    //유닛 행동 관련
     public virtual void Move()
     {
         if (!isStop)
         {
             if (targetUnit == null)
             {
+                ChangeActionType(ActionType.Idle);
                 GetTarget(this, unitType);
             }
             else
             {
-                var TargetPos = new Vector3(targetUnit.transform.position.x, YPos, ZPos);
-                var Dis = Vector3.Distance(transform.position, TargetPos);
-
-                if (Dis > statusData.DISTANCE)
+                if (targetUnit.isDie)
                 {
-                    ChangeActionType(ActionType.Run);
-                    transform.position = Vector3.MoveTowards(transform.position, TargetPos, Time.deltaTime * statusData.MOVE_SPEED);
+                    targetUnit = null;
                 }
                 else
                 {
-                    if(!isAttacking)
+                    var TargetPos = new Vector3(targetUnit.transform.position.x, YPos, ZPos);
+                    var Dis = Vector3.Distance(transform.position, TargetPos);
+
+                    if (Dis > statusData.DISTANCE)
                     {
-                        ChangeActionType(ActionType.Attack);
-                        AttackAnim();
-                        isAttacking = true;
+                        ChangeActionType(ActionType.Run);
+                        transform.position = Vector3.MoveTowards(transform.position, TargetPos, Time.deltaTime * statusData.MOVE_SPEED);
+                    }
+                    else
+                    {
+                        if (!isAttacking)
+                        {
+                            ChangeActionType(ActionType.Attack);
+                            AttackAnim();
+                            isAttacking = true;
+                        }
                     }
                 }
             }
@@ -178,6 +209,7 @@ public abstract partial class Unit
     public abstract void SkillAnim();
     public abstract void AnimEnd_Override();
     public abstract void AnimStart_Override();
+    public abstract void AnimDie_Override();
     void AnimEnd()
     {
         switch (unitActionType)
@@ -252,6 +284,14 @@ public abstract partial class Unit
 
         AnimStart_Override();
     }
+
+    void AnimDie()
+    {
+        PoolingManager.Instance.ClosePoolingObj(poolingType, gameObject);
+        GameHandle.Instance.CloseTargetUnit(this);
+        AnimDie_Override();
+        StopAllCoroutines();
+    }
 }
 
 //유닛 공격 및 타겟 설정
@@ -294,8 +334,14 @@ public partial class Unit
         targetUnit = unit;
     }
 
+    //유닛 데미지 주기위함
     public void Damage(Unit from, Unit to)
     {
         to.RealHP -= from.statusData.ATTACK_POWER;
+
+        if(to.RealHP == 0)
+        {
+            GameEventObserver.Publish(GameEventType.UnitDie, null);
+        }
     }
 }
