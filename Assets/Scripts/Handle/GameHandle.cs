@@ -11,11 +11,13 @@ public class GameHandle : Singleton<GameHandle>
     private void OnEnable()
     {
         GameEventObserver.Subscribe(GameEventType.GameStart, CharacterSpawn);
+        GameEventObserver.Subscribe(GameEventType.UnitDie, EnemySpawn);
     }
 
     private void OnDisable()
     {
         GameEventObserver.UnSubscribe(GameEventType.GameStart, CharacterSpawn);
+        GameEventObserver.UnSubscribe(GameEventType.UnitDie, EnemySpawn);
     }
 
     void CharacterSpawn(object obj)
@@ -59,9 +61,33 @@ public class GameHandle : Singleton<GameHandle>
         }
     }
 
-    void EnemySpawn(PoolingType poolingType)
+    void EnemySpawn(object obj)
     {
+        var enemyObj = PoolingManager.Instance.OpenPoolingObj(PoolingType.Ghost_Enemy);
 
+        if(enemyObj == null)
+        {
+            GameObject EnemyGo = null;
+            ResourceManager.Instance.LoadResourceFromChche_Go(ResourcePath.enemy_GhostPath, out EnemyGo);
+
+            if ((ReferenceEquals(EnemyGo, null)))
+            {
+#if UNITY_EDITOR
+                Debug.Log("캐릭터가 없습니다.");
+#endif
+                return;
+            }
+            else
+            {
+                var spawnGo = Instantiate(EnemyGo);
+                PoolingManager.Instance.AddPoolingObj(PoolingType.Ghost_Enemy, spawnGo);
+                var enemyUnit = spawnGo.GetComponent<Unit>();
+                enemyUnit.poolingType = PoolingType.Ghost_Enemy;
+                enemyUnit.transform.position = GameManager.Instance.enemy_InitPosTr.position;
+            }
+        }
+        else
+            enemyObj.transform.position = GameManager.Instance.enemy_InitPosTr.position;
     }
 
     public void AddTargetUnit(Unit unit)

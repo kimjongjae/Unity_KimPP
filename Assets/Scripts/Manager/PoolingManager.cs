@@ -21,13 +21,16 @@ public class PoolingManager : Singleton<PoolingManager>
     }
 
     //등록된 풀링 활성화
-    public void OpenPoolingObj(PoolingType pType, GameObject pObj)
+    public GameObject OpenPoolingObj(PoolingType pType)
     {
         if (poolingDic.TryGetValue(pType, out var checkObj))
         {
-            poolingDic[pType].Find((a) => a == pObj).SetActive(true);
-            pObj.transform.parent = null;
+            checkObj[0].SetActive(true);
+            checkObj[0].transform.parent = null;
+            return checkObj[0];
         }
+
+        return null;
     }
 
     //등록된 풀링 비활성화

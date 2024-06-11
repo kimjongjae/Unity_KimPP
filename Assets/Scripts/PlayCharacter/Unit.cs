@@ -10,6 +10,7 @@ public abstract partial class Unit : BaseUnit, CharacterHandle
 {
     public virtual void Init() 
     {
+        isDie = false;
     }
 }
 
@@ -23,8 +24,6 @@ public abstract partial class Unit
 
     //죽었는지 체크
     protected bool isDie = false;
-    //활동정지
-    protected bool isStop = false;
     //어택 딜레이 주기위함
     protected bool isAttacking = false;
 
@@ -54,13 +53,15 @@ public abstract partial class Unit
 
         set
         {
+            NowHP = value;
+
             if (NowHP == 0)
             {
                 isDie = true;
+                DieAnim();
+                ChangeActionType(ActionType.Die);
                 return;
             }
-
-            NowHP = value;
         }
     }
 
@@ -90,6 +91,7 @@ public abstract partial class Unit
     {
         while (true)
         {
+            yield return new WaitUntil(() => isDie == false);
             yield return null;
             UnitAction();
         }
@@ -98,9 +100,6 @@ public abstract partial class Unit
     //유닛 액션 스레드용 함수
     public virtual void UnitAction()
     {
-        if (isDie)
-            ChangeActionType(ActionType.Die);
-
         Move();
         switch (unitActionType)
         {
@@ -130,7 +129,6 @@ public abstract partial class Unit
                 break;
             case ActionType.Die:
                 {
-                    isStop = true;
                     DieAnim();
                 }
                 break;
@@ -159,7 +157,7 @@ public abstract partial class Unit
     //유닛 행동 관련
     public virtual void Move()
     {
-        if (!isStop)
+        if (!isDie)
         {
             if (targetUnit == null)
             {
@@ -289,8 +287,8 @@ public abstract partial class Unit
     {
         PoolingManager.Instance.ClosePoolingObj(poolingType, gameObject);
         GameHandle.Instance.CloseTargetUnit(this);
+        GameEventObserver.Publish(GameEventType.UnitDie, null);
         AnimDie_Override();
-        StopAllCoroutines();
     }
 }
 
@@ -338,10 +336,5 @@ public partial class Unit
     public void Damage(Unit from, Unit to)
     {
         to.RealHP -= from.statusData.ATTACK_POWER;
-
-        if(to.RealHP == 0)
-        {
-            GameEventObserver.Publish(GameEventType.UnitDie, null);
-        }
     }
 }
