@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D;
 
 public class ResourceManager : Singleton<ResourceManager>
 {
     private Dictionary<string, GameObject> _resourceCache = new Dictionary<string, GameObject>();
-    private Dictionary<string, Sprite> _resourceCacheSpr = new Dictionary<string, Sprite>();
+    private Dictionary<string, SpriteAtlas> _resourceCacheAtals = new Dictionary<string, SpriteAtlas>();
 
     public void LoadResourceFromChche_Go(string Path, out GameObject outGetGo)
     {
@@ -20,17 +21,16 @@ public class ResourceManager : Singleton<ResourceManager>
         outGetGo = resourceObj;
     }
 
-    public void LoadResourceFromChche_Spr(string Path, out Sprite outGetSpr)
+    public SpriteAtlas LoadResourceFromChche_Atlas(string Path)
     {
-        _resourceCacheSpr.TryGetValue(Path, out var resourceObj);
-
-        if (ReferenceEquals(resourceObj, null))
+        SpriteAtlas getAtlas = null;
+        if (_resourceCacheAtals.TryGetValue(Path, out getAtlas))
+            return getAtlas;
+        else
         {
-            resourceObj = (Sprite)Resources.Load(Path, typeof(Sprite));
-            _resourceCacheSpr.Add(Path, resourceObj);
+            getAtlas = Resources.Load<SpriteAtlas>("Skill_Icon");
+            return getAtlas;
         }
-
-        outGetSpr = resourceObj;
     }
 
     public void ClearChache()

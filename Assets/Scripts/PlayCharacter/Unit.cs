@@ -192,6 +192,9 @@ public abstract partial class Unit
                     {
                         if (!isAttacking)
                         {
+                            if(unitType == UnitType.Player)
+                                GameEventObserver.Publish(GameEventType.CameraIsStopStart, true);
+
                             ChangeActionType(ActionType.Attack);
                             AttackAnim();
                             isAttacking = true;

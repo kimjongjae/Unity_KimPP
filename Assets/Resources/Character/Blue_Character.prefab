@@ -274,7 +274,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -12, y: -5.5, z: 0}
-  m_LocalScale: {x: -1, y: 1, z: 1}
+  m_LocalScale: {x: -0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3770826842111619728}
@@ -371,11 +371,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46e51fa0575818542bab7086ae5d3714, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolingType: 0
   unitType: 0
   mainAnim: {fileID: 2687047469729205294}
   mainSpriteRender: {fileID: 7200732433152529568}
   normalSprite: {fileID: 21300000, guid: ce7b3baa5bac4c5f908f345eea062c67, type: 3}
+  poolingType: 0
   unitAnimtors:
   - characterWeaponType: 0
     AnimArray:

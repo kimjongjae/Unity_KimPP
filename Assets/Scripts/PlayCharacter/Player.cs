@@ -55,7 +55,6 @@ public partial class Player
                     if (!_isAttacking)
                     {
                         mainAnim.Play("sword_attack_side");
-                        GameEventObserver.Publish(GameEventType.CameraIsStopStart, true);
                         _isAttacking = true;
                     }
                 }
