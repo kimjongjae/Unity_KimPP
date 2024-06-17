@@ -6,7 +6,7 @@ using Common;
 using System.Linq;
 using System.Diagnostics.Tracing;
 
-public abstract partial class Unit : BaseUnit, CharacterHandle 
+public abstract partial class Unit : MonoBehaviour, CharacterHandle 
 {
     public virtual void Init() 
     {
@@ -17,6 +17,8 @@ public abstract partial class Unit : BaseUnit, CharacterHandle
 //행동 관련 및 변수
 public abstract partial class Unit
 {
+    Coroutine unitThread = null;
+
     //유닛 현재 활동 타입
     protected ActionType unitActionType = ActionType.Idle;
     //유닛 타입 ex)캐릭터, 적, 보스
@@ -39,6 +41,9 @@ public abstract partial class Unit
 
     protected float YPos => transform.position.y;
     protected float ZPos => transform.position.z;
+
+    //유닛 풀링 타입
+    public PoolingType poolingType = default;
 
     //현재 피
     protected float NowHP { get; set; }
@@ -69,13 +74,14 @@ public abstract partial class Unit
     {
         Init();
         GameEvent_Observer();
-        StartCoroutine("UnitThread");
+        unitThread = StartCoroutine(UnitThread());
     }
 
     private void OnDisable()
     {
         GameEvent_UnObserver();
-        StopCoroutine("UnitThread");
+        StopCoroutine(unitThread);
+        unitThread = null;
     }
 
     public virtual void GameEvent_Observer()
@@ -89,9 +95,11 @@ public abstract partial class Unit
 
     IEnumerator UnitThread()
     {
+        //최적화 변수 선언
+        var waitUntil = new WaitUntil(() => isDie == false);
         while (true)
         {
-            yield return new WaitUntil(() => isDie == false);
+            yield return waitUntil;
             yield return null;
             UnitAction();
         }
