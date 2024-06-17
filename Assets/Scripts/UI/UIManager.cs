@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class UIManager : Singleton<UIManager>
+public partial class UIManager : Singleton<UIManager>
 {
     [SerializeField] private List<UIPage> _pages = new List<UIPage>();
 
@@ -21,4 +21,10 @@ public class UIManager : Singleton<UIManager>
     {
         return _pages.FirstOrDefault(p => p.GetType() == typeof(T))?.Off() as T;
     }
+
+}
+
+public partial class UIManager
+{
+    
 }

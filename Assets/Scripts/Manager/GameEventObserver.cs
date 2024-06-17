@@ -12,6 +12,8 @@ public enum GameEventType
    CameraIsStopStart,
    //유닛 죽음
    UnitDie,
+   //캐릭터 스킬 사용 가능 시 리스트에 추가
+   Character_SkillAdd,
 }
 
 public class GameEventObserver : MonoBehaviour

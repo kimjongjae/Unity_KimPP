@@ -9,6 +9,7 @@ public partial class Player : Unit
     public UnitAnimtor[] unitAnimtors = null;
     bool _isAttacking = false;
     CharacterWeaponType weaponType = default;
+    List<int> UseOnSkillList = new List<int>();
 
     public override void Init()
     {
@@ -23,17 +24,29 @@ public partial class Player : Unit
     public override void GameEvent_Observer()
     {
         GameEventObserver.Subscribe(GameEventType.UnitDie, UnitDieEvent);
+        GameEventObserver.Subscribe(GameEventType.Character_SkillAdd, CharacterSkillAdd);
     }
 
     public override void GameEvent_UnObserver()
     {
         GameEventObserver.UnSubscribe(GameEventType.UnitDie, UnitDieEvent);
+        GameEventObserver.UnSubscribe(GameEventType.Character_SkillAdd, CharacterSkillAdd);
     }
 
+    #region 이벤트 등록 함수
     void UnitDieEvent(object obj)
     {
         unitAnimtors[(int)weaponType].WeaponGo.SetActive(false);
     }
+
+    void CharacterSkillAdd(object obj)
+    {
+        var skillIdx = int.Parse(obj.ToString());
+
+        if (!UseOnSkillList.Contains(skillIdx))
+            UseOnSkillList.Add(skillIdx);
+    }
+    #endregion
 }
 
 //캐릭터 액션 관리

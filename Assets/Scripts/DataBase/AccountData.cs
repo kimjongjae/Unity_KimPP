@@ -2,17 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AccountData : MonoBehaviour
+public class AccountData : Singleton<AccountData>
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public Account_Skill account_Skill = null;
 
-    // Update is called once per frame
-    void Update()
+    private void Awake()
     {
-        
+        account_Skill = new Account_Skill();
     }
 }

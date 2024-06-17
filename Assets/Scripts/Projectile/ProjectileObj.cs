@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ProjectileObj : MonoBehaviour
 {
-    public static void CreateProjectObj(bool isOnlyDamage, Unit fromUnit, Unit toUnit)
+    public static void CreateProjectObj(bool isOnlyDamage, Unit fromUnit, Unit toUnit, int skillIdx = 0)
     {
         if (isOnlyDamage)
         {
@@ -12,7 +12,14 @@ public class ProjectileObj : MonoBehaviour
         }
         else
         {
+            if (skillIdx != 0)
+            {
 
+            }
+            else
+            {
+
+            }
         }
     }
 }
