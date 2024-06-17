@@ -55,6 +55,7 @@ public partial class Player
                     if (!_isAttacking)
                     {
                         mainAnim.Play("sword_attack_side");
+                        GameEventObserver.Publish(GameEventType.CameraIsStopStart, true);
                         _isAttacking = true;
                     }
                 }
@@ -108,6 +109,7 @@ public partial class Player
     public override void AnimEnd_Override()
     {
         _isAttacking = false;
+        GameEventObserver.Publish(GameEventType.CameraIsStopStart, false);
         ProjectileObj.CreateProjectObj(true, this, targetUnit);
     }
 
