@@ -1,3 +1,4 @@
+using Common;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,9 @@ using UnityEngine;
 public partial class Status
 {
     public static ulong _uuid = 0;
+
+    //Dictionary<float, StatusType> GameStats = new Dictionary<float, StatusType>();
+
     public ulong UUID { get; protected set; }
     public float HP { get; protected set; }
     public float MP { get; protected set; }
@@ -34,7 +38,14 @@ public class PlayerStatus : Status
         ATTACK_POWER = Excel.TableData.Inst.normalStat.ATTACK_POWER;
         MOVE_SPEED = Excel.TableData.Inst.normalStat.MOVE_SPEED;
         DISTANCE = Excel.TableData.Inst.normalStat.DISTANCE;
+
+        //ATTACK_POWER = FinalATK();
     }
+
+    //float FinalATK()
+    //{
+    //    return 0;
+    //}
 }
 
 public class EnemyStatus : Status
