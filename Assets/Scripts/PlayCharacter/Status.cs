@@ -15,6 +15,9 @@ public partial class Status
     public float ATTACK_POWER { get; protected set; }
     public float MOVE_SPEED { get; protected set; }
     public float DISTANCE { get; protected set; }
+    public float HEAL {  get; protected set; }
+    public float CRITICAL_CHANCE { get; protected set; }
+    public float CRITICAL_DAMAGE { get; protected set; }
 }
 public partial class Status
 {
@@ -25,6 +28,9 @@ public partial class Status
         ATTACK_POWER = Excel.TableData.Inst.normalStat.ATTACK_POWER;
         MOVE_SPEED = Excel.TableData.Inst.normalStat.MOVE_SPEED;
         DISTANCE = Excel.TableData.Inst.normalStat.DISTANCE;
+        HEAL = Excel.TableData.Inst.normalStat.HEAL;
+        CRITICAL_CHANCE = Excel.TableData.Inst.normalStat.CRITICAL_CHANCE;
+        CRITICAL_DAMAGE = Excel.TableData.Inst.normalStat.CRITICAL_DAMAGE;
     }
 }
 
@@ -38,6 +44,9 @@ public class PlayerStatus : Status
         ATTACK_POWER = Excel.TableData.Inst.normalStat.ATTACK_POWER;
         MOVE_SPEED = Excel.TableData.Inst.normalStat.MOVE_SPEED;
         DISTANCE = Excel.TableData.Inst.normalStat.DISTANCE;
+        HEAL = Excel.TableData.Inst.normalStat.HEAL;
+        CRITICAL_CHANCE = Excel.TableData.Inst.normalStat.CRITICAL_CHANCE;
+        CRITICAL_DAMAGE = Excel.TableData.Inst.normalStat.CRITICAL_DAMAGE;
 
         //ATTACK_POWER = FinalATK();
     }
@@ -58,5 +67,8 @@ public class EnemyStatus : Status
         ATTACK_POWER = Excel.TableData.Inst.normalStat.ATTACK_POWER;
         MOVE_SPEED = Excel.TableData.Inst.normalStat.MOVE_SPEED;
         DISTANCE = Excel.TableData.Inst.normalStat.DISTANCE;
+        HEAL = Excel.TableData.Inst.normalStat.HEAL;
+        CRITICAL_CHANCE = Excel.TableData.Inst.normalStat.CRITICAL_CHANCE;
+        CRITICAL_DAMAGE = Excel.TableData.Inst.normalStat.CRITICAL_DAMAGE;
     }
 }
