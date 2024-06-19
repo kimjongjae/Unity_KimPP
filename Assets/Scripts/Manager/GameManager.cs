@@ -9,8 +9,11 @@ public class GameManager : Singleton<GameManager>
     public Transform character_InitPosTr = null;
     public Transform enemy_InitPosTr = null;
 
+    ServerManager serverManager = null;
+
     private void Awake()
     {
+        serverManager = GetComponent<ServerManager>();
         DontDestroyOnLoad(this);
     }
 
@@ -23,5 +26,7 @@ public class GameManager : Singleton<GameManager>
 
         GameEventObserver.Publish(GameEventType.GameStart, null);
         GameEventObserver.Publish(GameEventType.CameraIsStopStart, false);
+
+        //serverManager.GetSeverData(4000);
     }
 }

@@ -4,11 +4,16 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class ServerManager
+public class ServerManager : MonoBehaviour
 {
-    public IEnumerator GetDataFromServer()
+    public void GetSeverData(int port)
     {
-        string url = "http://localhost:3000/api/data"; // Express.js 서버의 주소와 포트를 여기에 입력하세요
+        StartCoroutine(GetDataFromServer(port));
+    }
+
+    public IEnumerator GetDataFromServer(int port)
+    {
+        string url = "http://localhost:4000/api/data"; // Express.js 서버의 주소와 포트를 여기에 입력하세요
 
         using (UnityWebRequest www = UnityWebRequest.Get(url))
         {
@@ -20,6 +25,7 @@ public class ServerManager
             }
             else
             {
+                var jsonData = JsonUtility.FromJson<StageDataObject>(www.downloadHandler.text);
                 Debug.Log("Received: " + www.downloadHandler.text);
                 // 받은 데이터를 여기에서 처리합니다
             }
